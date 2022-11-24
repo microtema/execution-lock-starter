@@ -1,0 +1,15 @@
+git:
+  build:
+    time: buildTime
+    version: buildVersion
+  commit:
+    id:
+      full: fullCommitId
+coupa:
+  server: https://united-internet-test.coupahost.com
+  oauth2:
+    clientId: test-id
+    clientSecret: test-secret
+    scope: test-scope
+    expiredInSeconds: 86400
+    reduceExpiredInSeconds: 3600

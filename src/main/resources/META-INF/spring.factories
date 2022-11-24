@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+de.microtema.execution.lock.config.ExecutionLockConfiguration
