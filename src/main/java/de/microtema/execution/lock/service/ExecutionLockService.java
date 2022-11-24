@@ -7,7 +7,6 @@ import de.microtema.execution.lock.repository.ExecutionLockWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.sql.Types;
@@ -18,7 +17,6 @@ import java.util.UUID;
 
 
 @Service
-@ConditionalOnProperty(prefix = "execution-lock", name = "disabled", havingValue = "false")
 public class ExecutionLockService {
 
     private static final String APP_ID = Optional.ofNullable(System.getenv("HOSTNAME")).orElseGet(() -> UUID.randomUUID().toString());
@@ -109,7 +107,7 @@ public class ExecutionLockService {
 
     private void bruteForceUnlock(String name) {
 
-       // log.warn("BRUTE FORCE DELETE!! Lock: {}", name);
+        // log.warn("BRUTE FORCE DELETE!! Lock: {}", name);
 
         String tableName = jdbcTemplate.getTableName();
 
