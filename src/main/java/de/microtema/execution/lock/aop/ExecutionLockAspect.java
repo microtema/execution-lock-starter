@@ -1,7 +1,9 @@
 package de.microtema.execution.lock.aop;
 
 
-import de.microtema.execution.lock.util.LockUtil;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import de.microtema.execution.lock.config.ExecutionLockProperties;
 import de.microtema.execution.lock.enums.ExecutionLock;
 import de.microtema.execution.lock.service.ExecutionLockService;
@@ -13,6 +15,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,6 +26,8 @@ import java.util.Map;
 @Aspect
 @Component
 public class ExecutionLockAspect {
+
+    private final static MustacheFactory mustacheFactory = new DefaultMustacheFactory();
 
     private final ExecutionLockService executionLockService;
     private final ExecutionLockProperties executionLockProperties;
@@ -44,7 +51,7 @@ public class ExecutionLockAspect {
 
         Map<String, Object> payload = getPayload(parameterNames, methodArguments);
 
-        String name = LockUtil.compileExpression(executionLock.name(), payload);
+        String name = compileExpression(executionLock.name(), payload);
         Long lockAtLeastFor = getLongValueOrDefault(payload, executionLock.lockAtLeastFor(), executionLockProperties.getLockAtLeastFor());
         Long lockAtMostFor = getLongValueOrDefault(payload, executionLock.lockAtLeastFor(), executionLockProperties.getLockAtMostFor());
 
@@ -67,9 +74,9 @@ public class ExecutionLockAspect {
 
     private Long getLongValueOrDefault(Map<String, Object> payload, String lockAtLeastForTemplate, Long defaultValue) {
 
-        String longValueStr = LockUtil.compileExpression(lockAtLeastForTemplate, payload);
+        String longValueStr = compileExpression(lockAtLeastForTemplate, payload);
 
-        Long longValue = LockUtil.parseLong(longValueStr, defaultValue);
+        Long longValue = parseLong(longValueStr, defaultValue);
 
         if (longValue == -1) {
             return defaultValue;
@@ -105,5 +112,22 @@ public class ExecutionLockAspect {
         }
 
         return payload;
+    }
+
+    protected String compileExpression(String template, Map<String, Object> context) {
+
+        Mustache mustache = mustacheFactory.compile(new StringReader(template), template);
+
+        Writer execute = mustache.execute(new StringWriter(), context);
+
+        return execute.toString();
+    }
+
+    protected Long parseLong(String longValueStr, Long defaultValue) {
+        try {
+            return Long.valueOf(longValueStr);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 }

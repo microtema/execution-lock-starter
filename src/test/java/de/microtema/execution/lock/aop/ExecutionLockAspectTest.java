@@ -1,19 +1,24 @@
-package de.microtema.execution.lock.util;
+package de.microtema.execution.lock.aop;
 
+import de.microtema.model.builder.annotation.Inject;
 import de.microtema.model.builder.annotation.Model;
 import de.microtema.model.builder.util.FieldInjectionUtil;
+import org.aspectj.lang.annotation.RequiredTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.util.MockUtil;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-class LockUtilTest {
+@ExtendWith(MockitoExtension.class)
+class ExecutionLockAspectTest {
 
-    LockUtil sut;
+    @InjectMocks
+    ExecutionLockAspect sut;
 
     @Model
     String id;
@@ -34,7 +39,7 @@ class LockUtilTest {
 
         context.put("ID", id);
 
-        String answer = LockUtil.compileExpression("{{ID}}", context);
+        String answer = sut.compileExpression("{{ID}}", context);
 
         assertNotNull(answer);
 
@@ -44,7 +49,7 @@ class LockUtilTest {
     @Test
     void parseLong() {
 
-        Long answer = LockUtil.parseLong(count.toString(), null);
+        Long answer = sut.parseLong(count.toString(), null);
 
         assertNotNull(answer);
 
@@ -54,7 +59,7 @@ class LockUtilTest {
     @Test
     void parseLongOnNull() {
 
-        Long answer = LockUtil.parseLong(null, count);
+        Long answer = sut.parseLong(null, count);
 
         assertNotNull(answer);
 
@@ -64,7 +69,7 @@ class LockUtilTest {
     @Test
     void parseLongOnNonNumeric() {
 
-        Long answer = LockUtil.parseLong(id, count);
+        Long answer = sut.parseLong(id, count);
 
         assertNotNull(answer);
 
