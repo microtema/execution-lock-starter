@@ -5,7 +5,7 @@
 
     <groupId>de.microtema</groupId>
     <artifactId>execution-lock-starter</artifactId>
-    <version>2.0.1</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
 
     <name>Execution Lock Spring Boot Stater Library</name>
@@ -13,24 +13,21 @@
     <url>https://github.com/microtema/execution-lock-starter.git</url>
 
     <properties>
+        <java.version>17</java.version>
+        <maven.compiler.source.version>17</maven.compiler.source.version>
+        <maven.compiler.target.version>17</maven.compiler.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <maven.compiler.source.version>1.8</maven.compiler.source.version>
-        <maven.compiler.target.version>1.8</maven.compiler.target.version>
-        <maven.source.plugin>2.2.1</maven.source.plugin>
-        <maven.compiler.plugin>2.3.2</maven.compiler.plugin>
-        <maven.javadoc.plugin>2.10.4</maven.javadoc.plugin>
-
-        <sonar.language>java</sonar.language>
-        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <jacoco.version>0.7.7.201606060606</jacoco.version>
+        <springframework.version>3.0.0</springframework.version>
 
         <commons.lang3.version>3.4</commons.lang3.version>
-        <springframework.version>2.6.6</springframework.version>
+        <validation.api.version>2.0.1.Final</validation.api.version>
+        <model-builder.version>2.5.3</model-builder.version>
+        <model-converter.version>2.0.5</model-converter.version>
 
-        <junit.version>4.13.1</junit.version>
-        <powermock.version>1.7.1</powermock.version>
+        <maven.compiler.plugin>2.3.2</maven.compiler.plugin>
+        <maven.source.plugin>2.2.1</maven.source.plugin>
+        <maven.javadoc.plugin>2.10.4</maven.javadoc.plugin>
     </properties>
 
     <dependencies>
@@ -87,38 +84,32 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.1</version>
+                    <configuration>
+                        <compilerArgs>
+                            <arg>-parameters</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin}</version>
-                <inherited>true</inherited>
+                <version>3.10.1</version>
                 <configuration>
-                    <source>${maven.compiler.source.version}</source>
-                    <target>${maven.compiler.target.version}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.0</version>
-                <configuration>
-                    <reuseForks>false</reuseForks>
-                    <argLine>-Dfile.encoding=UTF-8</argLine>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
